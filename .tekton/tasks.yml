@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: cleanup
+spec:
+  steps:
+    - name: cleanup
+      image: busybox
+      script: |
+        #!/bin/sh
+        rm -rf /workspace/output/*
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: nose
+spec:
+  steps:
+    - name: run-tests
+      image: python:3.9
+      script: |
+        #!/bin/sh
+        cd /workspace/output
+        nosetests -v --with-spec --spec-color --with-coverage --cover-package=service
